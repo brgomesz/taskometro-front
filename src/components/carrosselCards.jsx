@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import api from "../services/api";
 import { format } from "date-fns";
 import SliderTrail from "./Card";
+import { Button } from "@mui/material";
 
 function CarrosselCards() {
   const settings = {
@@ -44,14 +45,25 @@ function CarrosselCards() {
   }, []);
 
   return (
-    <div style={{ maxWidth: "800px", margin: "auto", padding: "10px" }}>
-      {Object.keys(sprints).map((sprint) => (
-        <div style={{marginBottom:'20px'}} key={sprint}>
-          <h2 style={{ textAlign: "center" }}>Sprint {sprint}</h2>
-          <SliderTrail cards={sprints[sprint]} />
-        </div>
-      ))}
-    </div>
+    <>
+    
+      <div
+        style={{
+          maxWidth: "800px",
+          margin: "auto",
+          padding: "10px",
+          backgroundColor: "#CDD9E0",
+        }}
+      >
+        <div><Button>Adicionar</Button></div>
+        {Object.keys(sprints).map((sprint) => (
+          <div style={{ marginBottom: "20px" }} key={sprint}>
+            <h2 style={{ textAlign: "center" }}>Sprint {sprint}</h2>
+            <SliderTrail cards={sprints[sprint]} />
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
