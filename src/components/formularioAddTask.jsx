@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import api from "../services/api";
 
-function FormularioAddTask() {
+function FormularioAddTask({ onClose }) {
   const [form, setForm] = useState({
     numeroTask: "",
     descricaoTask: "",
@@ -48,139 +48,129 @@ function FormularioAddTask() {
         ? new Date(form.prazoTerminoTask).toISOString()
         : null,
     });
-    // getUsers(); // Se necessário
+    if (onClose) onClose();
   }
 
   return (
     <Box
       display="flex"
+      flexDirection={"column"}
       justifyContent="center"
-      alignItems="center"
-      height="100vh"
+      alignItems="start"
+      height="auto"
+      gap="16px"
     >
-      <Paper elevation={3} sx={{ padding: 4, maxWidth: 500 }}>
-        <Typography variant="h5" textAlign="center" gutterBottom>
-          Formulário da Task
-        </Typography>
-        <Grid container spacing={2} component="form">
-          <Grid item xs={12}>
-            <TextField
-              label="Número da Task"
-              type="number"
-              name="numeroTask"
-              value={form.numeroTask}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Descrição rápida"
-              name="descricaoTask"
-              value={form.descricaoTask}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Sprint"
-              name="sprintTask"
-              value={form.sprintTask}
-              onChange={handleChange}
-              fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Data de início"
-              type="date"
-              name="dataInicioTask"
-              value={form.dataInicioTask}
-              onChange={handleChange}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              required
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Data de término"
-              type="date"
-              name="dataTerminoTask"
-              value={form.dataTerminoTask}
-              onChange={handleChange}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Prazo final"
-              type="date"
-              name="prazoTerminoTask"
-              value={form.prazoTerminoTask}
-              onChange={handleChange}
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="aceTask"
-                  checked={form.aceTask}
-                  onChange={handleChange}
-                />
-              }
-              label="Passou de primeira?"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Pontos de aprendizado"
-              name="aprendizadoTask"
-              value={form.aprendizadoTask}
-              onChange={handleChange}
-              fullWidth
-              multiline
-              rows={3}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Dificuldade"
-              type="number"
-              name="dificuldadeTask"
-              value={form.dificuldadeTask}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Comentários"
-              name="comentariosTask"
-              value={form.comentariosTask}
-              onChange={handleChange}
-              fullWidth
-              multiline
-              rows={3}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" onClick={createTasks}>
-              Enviar
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
+      <Typography variant="h5" textAlign="center">
+        Adicione sua Task
+      </Typography>
+      <TextField
+        label="Número da Task"
+        type="number"
+        name="numeroTask"
+        value={form.numeroTask}
+        onChange={handleChange}
+        fullWidth
+        required
+      />
+      <Box sx={{ display: "flex", gap: 3, maxWidth: "100%" }}>
+        <TextField
+          label="Sprint"
+          name="sprintTask"
+          value={form.sprintTask}
+          onChange={handleChange}
+          fullWidth
+          required
+        />
+        <TextField
+          label="Data de início"
+          type="date"
+          name="dataInicioTask"
+          value={form.dataInicioTask}
+          onChange={handleChange}
+          fullWidth
+          InputLabelProps={{ shrink: true }}
+          required
+        />
+      </Box>
+      <Box sx={{ display: "flex", gap: 3, maxWidth: "100%" }}>
+        <TextField
+          label="Data de término"
+          type="date"
+          name="dataTerminoTask"
+          value={form.dataTerminoTask}
+          onChange={handleChange}
+          fullWidth
+          InputLabelProps={{ shrink: true }}
+          required
+        />
+        <TextField
+          label="Prazo final"
+          type="date"
+          name="prazoTerminoTask"
+          value={form.prazoTerminoTask}
+          onChange={handleChange}
+          fullWidth
+          InputLabelProps={{ shrink: true }}
+          placeholder=""
+          required
+        />
+      </Box>
+
+      <TextField
+        label="Descrição rápida"
+        name="descricaoTask"
+        value={form.descricaoTask}
+        onChange={handleChange}
+        fullWidth
+        required
+      />
+
+      <TextField
+        label="Pontos de aprendizado"
+        name="aprendizadoTask"
+        value={form.aprendizadoTask}
+        onChange={handleChange}
+        fullWidth
+        multiline
+        rows={2}
+      />
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="aceTask"
+            checked={form.aceTask}
+            onChange={handleChange}
+          />
+        }
+        label="Passou de primeira?"
+      />
+
+      <TextField
+        label="Dificuldade"
+        type="number"
+        name="dificuldadeTask"
+        value={form.dificuldadeTask}
+        onChange={handleChange}
+        fullWidth
+      />
+
+      <TextField
+        label="Comentários"
+        name="comentariosTask"
+        value={form.comentariosTask}
+        onChange={handleChange}
+        fullWidth
+        multiline
+        rows={2}
+      />
+      <Button
+        variant="contained"
+        sx={{ margin: "auto", width: "100%" }}
+        onClick={createTasks}
+      >
+        Enviar
+      </Button>
     </Box>
   );
 }

@@ -1,27 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useEffect, useState } from "react";
 import api from "../services/api";
-import { format } from "date-fns";
 import SliderTrail from "./Card";
-import { Button } from "@mui/material";
+import { Button, Dialog, DialogContent } from "@mui/material";
+import FormularioAddTask from "./formularioAddTask";
 
 function CarrosselCards() {
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 1, // Exibir 1 card principal + 0.1 de cada lado
+    slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: true, // Ativa botões de navegação
-    centerMode: true, // Mantém o slide principal no centro
-    adaptiveHeight: true, // Ajusta altura dos cards automaticamente
+    arrows: true,
+    centerMode: true,
+    adaptiveHeight: true,
   };
 
   const [cards, setCards] = useState([]);
   const [sprints, setSprints] = useState({});
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     api
@@ -37,25 +37,29 @@ function CarrosselCards() {
       .catch((error) => console.error("Erro ao buscar tasks:", error));
   }, []);
 
-  useEffect(() => {
-    api
-      .get("/tasks")
-      .then((response) => setCards(response.data))
-      .catch((error) => console.error("Erro ao buscar tasks:", error));
-  }, []);
+  // Opcional: recarregar tasks após adicionar uma nova
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    // Você pode recarregar as tasks aqui se quiser atualizar a lista automaticamente
+    // window.location.reload(); // ou refaça a chamada da API
+  };
 
   return (
     <>
-    
       <div
         style={{
           maxWidth: "800px",
           margin: "auto",
           padding: "10px",
           backgroundColor: "#CDD9E0",
+          overflow: openModal ? "block" : "auto",
         }}
       >
-        <div><Button>Adicionar</Button></div>
+        <div>
+          <Button variant="contained" onClick={() => setOpenModal(true)}>
+            Adicionar
+          </Button>
+        </div>
         {Object.keys(sprints).map((sprint) => (
           <div style={{ marginBottom: "20px" }} key={sprint}>
             <h2 style={{ textAlign: "center" }}>Sprint {sprint}</h2>
@@ -63,6 +67,16 @@ function CarrosselCards() {
           </div>
         ))}
       </div>
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogContent>
+          <FormularioAddTask onClose={handleCloseModal} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

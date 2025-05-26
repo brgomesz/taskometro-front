@@ -25,7 +25,6 @@ function SliderTrail({ cards }) {
         {cards.map((card) => (
           <div key={card.id} style={{ padding: "10px", textAlign: "center" }}>
             <div
-              onClick={() => !expandido && setExpandido(true)}
               style={{
                 background: "linear-gradient(180deg, #7FD9F8, #3399FF)",
                 padding: "20px",
@@ -104,7 +103,7 @@ function SliderTrail({ cards }) {
                     </p>
                   </div>
                   <div style={{ display: "flex", flexDirection: "column" }}>
-                    <p>
+                    <div>
                       <p
                         style={{
                           color: "#FFFFFF",
@@ -118,9 +117,27 @@ function SliderTrail({ cards }) {
                         : card.dificuldadeTask === 2
                         ? "⭐⭐"
                         : "⭐⭐⭐"}
-                    </p>
+                    </div>
                   </div>
                 </div>
+                {!expandido && (
+                  <Button
+                    sx={{
+                      mt: -7,
+                      ml: "-20px",
+                      height: "20px",
+                      pt: "50px",
+                      width: "250px",
+                      backgroundColor: "white",
+                      background:
+                        "linear-gradient(180deg, transparent,rgba(255, 255, 255, 0.47))",
+                    }}
+                    onClick={() => !expandido && setExpandido(true)}
+                  >
+                    🔽
+                  </Button>
+                )}
+
                 <div
                   style={{
                     display: "flex",
@@ -197,7 +214,6 @@ function SliderTrail({ cards }) {
                     paddingTop: "8px",
                     color: "#ffffff",
                     textShadow: "2px 2px 2px rgba(0, 0, 0, 0.4)",
-                    
                   }}
                 >
                   Comentários:
@@ -221,7 +237,6 @@ function SliderTrail({ cards }) {
                     bottom: "13px",
                     width: "85%",
                     textAlign: "center",
-                    
                   }}
                 >
                   <Button

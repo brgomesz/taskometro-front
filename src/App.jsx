@@ -17,8 +17,7 @@ function App() {
   const [showFormulario, setShowFormulario] = useState(false);
   return (
     <>
-      {showFormulario && <FormularioAddTask />}
-     
+      {showFormulario && <FormularioAddTask />}     
       <CarrosselCards />
     </>
   );
