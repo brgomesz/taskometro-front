@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { format } from "date-fns";
 import { Button } from "@mui/material";
+import api from "../services/api";
 
 function SliderTrail({ cards }) {
   const settings = {
@@ -18,6 +19,23 @@ function SliderTrail({ cards }) {
   };
 
   const [expandido, setExpandido] = useState(false);
+  // const handleDelete = (id) => {
+  //   const confirmacao = window.confirm(
+  //     "Tem certeza que deseja deletar esta task?"
+  //   );
+  //   if (confirmacao) {
+  //     fetch(`http://localhost:4000/tasks/${id}`, { method: "DELETE" })
+  //       .then((response) => response.json())
+  //       .then(() => {
+  //         console.log(`Task ${id} deletada com sucesso!`);
+  //       })
+  //       .catch((error) => console.error("Erro ao deletar task:", error));
+  //   }
+  // };
+
+  async function deleteTask(id) {
+    await api.delete(`/tasks/${id}`);
+  }
 
   return (
     <>
@@ -239,17 +257,38 @@ function SliderTrail({ cards }) {
                     textAlign: "center",
                   }}
                 >
-                  <Button
-                    variant="contained"
-                    onClick={() => setExpandido(false)}
+                  <div
                     style={{
-                      padding: "1px 10px",
-                      borderRadius: "5px",
-                      cursor: "pointer",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      padding: "0px",
+                      height: "25px",
                     }}
                   >
-                    Recolher
-                  </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => deleteTask(card.id)}
+                      style={{
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                        color: "white",
+                        fontSize: 25,
+                      }}
+                    >
+                      🗑
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => setExpandido(false)}
+                      style={{
+                        padding: "1px 25px",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      ⏫
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
