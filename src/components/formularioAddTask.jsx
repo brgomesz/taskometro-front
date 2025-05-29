@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import api from "../services/api";
 
-function FormularioAddTask({ onClose }) {
+function FormularioAddTask({ onClose, fetchTasks  }) {
   const [form, setForm] = useState({
     numeroTask: "",
     descricaoTask: "",
@@ -48,6 +48,7 @@ function FormularioAddTask({ onClose }) {
         ? new Date(form.prazoTerminoTask).toISOString()
         : null,
     });
+    await fetchTasks();
     if (onClose) onClose();
   }
 

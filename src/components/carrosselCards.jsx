@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
+import { Button, Dialog, DialogContent, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
 import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 import api from "../services/api";
 import SliderTrail from "./Card";
-import { Button, Dialog, DialogContent } from "@mui/material";
 import FormularioAddTask from "./formularioAddTask";
 
 function CarrosselCards() {
@@ -22,27 +21,40 @@ function CarrosselCards() {
   const [cards, setCards] = useState([]);
   const [sprints, setSprints] = useState({});
   const [openModal, setOpenModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
+  const fetchTasks = async () => {
+    try {
+      const response = await api.get("/tasks");
+      const groupedBySprint = response.data.reduce((acc, task) => {
+        acc[task.sprintTask] = acc[task.sprintTask] || [];
+        acc[task.sprintTask].push(task);
+        return acc;
+      }, {});
+      setSprints(groupedBySprint); // Atualiza o estado aqui!
+    } catch (error) {
+      console.error("Erro ao buscar tasks:", error);
+      setSprints({});
+    }
+  };
+
+  // Uso no useEffect
   useEffect(() => {
-    api
-      .get("/tasks")
-      .then((response) => {
-        const groupedBySprint = response.data.reduce((acc, task) => {
-          acc[task.sprintTask] = acc[task.sprintTask] || [];
-          acc[task.sprintTask].push(task);
-          return acc;
-        }, {});
-        setSprints(groupedBySprint);
-      })
-      .catch((error) => console.error("Erro ao buscar tasks:", error));
+    fetchTasks();
   }, []);
 
-  // Opcional: recarregar tasks após adicionar uma nova
   const handleCloseModal = () => {
     setOpenModal(false);
-    // Você pode recarregar as tasks aqui se quiser atualizar a lista automaticamente
-    // window.location.reload(); // ou refaça a chamada da API
   };
+
+  const filteredSprints = Object.keys(sprints).reduce((acc, sprint) => {
+    acc[sprint] = sprints[sprint].filter(
+      (task) =>
+        task.descricaoTask.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.numeroTask.toString().includes(searchQuery)
+    );
+    return acc;
+  }, {});
 
   return (
     <>
@@ -50,23 +62,43 @@ function CarrosselCards() {
         style={{
           maxWidth: "800px",
           margin: "auto",
+          height:'96vh',
           padding: "10px",
           backgroundColor: "#CDD9E0",
           overflow: openModal ? "block" : "auto",
         }}
       >
+        {/* Search Bar */}
+        <TextField
+          label="Pesquisar tarefas"
+          variant="outlined"
+          fullWidth
+          size="small"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Digite para buscar..."
+          style={{ marginBottom: "20px" }}
+        />
+
         <div>
           <Button variant="contained" onClick={() => setOpenModal(true)}>
             Adicionar
           </Button>
         </div>
-        {Object.keys(sprints).map((sprint) => (
+
+        {/* Exibição dos cards filtrados */}
+        {Object.keys(filteredSprints).map((sprint) => (
           <div style={{ marginBottom: "20px" }} key={sprint}>
             <h2 style={{ textAlign: "center" }}>Sprint {sprint}</h2>
-            <SliderTrail cards={sprints[sprint]} />
+            <SliderTrail
+              cards={filteredSprints[sprint]}
+              fetchTasks={fetchTasks}
+              setCards={setCards}
+            />
           </div>
         ))}
       </div>
+
       <Dialog
         open={openModal}
         onClose={handleCloseModal}
@@ -74,7 +106,10 @@ function CarrosselCards() {
         fullWidth
       >
         <DialogContent>
-          <FormularioAddTask onClose={handleCloseModal} />
+          <FormularioAddTask
+            onClose={handleCloseModal}
+            fetchTasks={fetchTasks}
+          />
         </DialogContent>
       </Dialog>
     </>

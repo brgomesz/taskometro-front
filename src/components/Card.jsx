@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { Button } from "@mui/material";
 import api from "../services/api";
 
-function SliderTrail({ cards }) {
+function SliderTrail({ cards, fetchTasks, setCards }) {
   const settings = {
     dots: true,
     infinite: true,
@@ -19,23 +19,25 @@ function SliderTrail({ cards }) {
   };
 
   const [expandido, setExpandido] = useState(false);
-  // const handleDelete = (id) => {
-  //   const confirmacao = window.confirm(
-  //     "Tem certeza que deseja deletar esta task?"
-  //   );
-  //   if (confirmacao) {
-  //     fetch(`http://localhost:4000/tasks/${id}`, { method: "DELETE" })
-  //       .then((response) => response.json())
-  //       .then(() => {
-  //         console.log(`Task ${id} deletada com sucesso!`);
-  //       })
-  //       .catch((error) => console.error("Erro ao deletar task:", error));
-  //   }
-  // };
 
   async function deleteTask(id) {
-    await api.delete(`/tasks/${id}`);
+    const confirmacao = window.confirm(
+      "Tem certeza que deseja deletar esta task?"
+    );
+    if (confirmacao) {
+      await api.delete(`/tasks/${id}`);
+      setCards((prevCards) => prevCards.filter((card) => card.id !== id)); // ✅ Agora funciona!
+      await fetchTasks();
+      alert("Task deletada com sucesso!");
+      await fetchTasks();
+    }
   }
+
+  // async function deleteTask(id) {
+  //   await api.delete(`/tasks/${id}`);
+  //   setCards((prevCards) => prevCards.filter((card) => card.id !== id)); // ✅ Agora funciona!
+  //   await fetchTasks();
+  // }
 
   return (
     <>
@@ -48,7 +50,7 @@ function SliderTrail({ cards }) {
                 padding: "20px",
                 borderRadius: "10px",
                 margin: "10px 10px",
-                minHeight: expandido ? "500px" : "180px",
+                minHeight: expandido ? "500px" : "80px",
                 maxHeight: expandido ? "500px" : "180px",
                 cursor: "pointer",
                 display: "flex",
@@ -223,9 +225,8 @@ function SliderTrail({ cards }) {
                       borderRadius: 10,
                       padding: 5,
                     }}
-                  >
-                    {card.aprendizadoTask}
-                  </textarea>
+                    defaultValue={card.aprendizadoTask}
+                  />
                 </div>
                 <div
                   style={{
@@ -243,9 +244,8 @@ function SliderTrail({ cards }) {
                       borderRadius: 10,
                       padding: 5,
                     }}
-                  >
-                    {card.comentariosTask}
-                  </textarea>
+                    defaultValue={card.comentariosTask}
+                  />
                 </div>
               </div>
               {expandido && (
