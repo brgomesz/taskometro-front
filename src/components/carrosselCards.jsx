@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogContent, TextField } from "@mui/material";
+import { Box, Button, Dialog, DialogContent, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
@@ -60,36 +60,48 @@ function CarrosselCards() {
     <>
       <div
         style={{
-          maxWidth: "800px",
+          maxWidth: { xs: "800px", sm: "90%", md: "90%" },
+          width: { xs: "800px", sm: "1800px", md: "1800px" },
           margin: "auto",
-          height:'96vh',
+          height: "96vh",
           padding: "10px",
           backgroundColor: "#CDD9E0",
           overflow: openModal ? "block" : "auto",
         }}
       >
         {/* Search Bar */}
-        <TextField
-          label="Pesquisar tarefas"
-          variant="outlined"
-          fullWidth
-          size="small"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Digite para buscar..."
-          style={{ marginBottom: "20px" }}
-        />
+        <Box style={{ display: "flex", gap: 20 }}>
+          <TextField
+            label="Pesquisar tarefas"
+            variant="outlined"
+            fullWidth
+            size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Digite para buscar..."
+            style={{ marginBottom: "20px" }}
+          />
 
-        <div>
-          <Button variant="contained" onClick={() => setOpenModal(true)}>
-            Adicionar
-          </Button>
-        </div>
+          <div>
+            <Button variant="contained" onClick={() => setOpenModal(true)}>
+              Adicionar
+            </Button>
+          </div>
+        </Box>
 
         {/* Exibição dos cards filtrados */}
         {Object.keys(filteredSprints).map((sprint) => (
           <div style={{ marginBottom: "20px" }} key={sprint}>
-            <h2 style={{ textAlign: "center" }}>Sprint {sprint}</h2>
+            <h2
+              style={{
+                textAlign: "start",
+                color: "#ffffff",
+                textShadow: "2px 2px 2px rgba(0, 0, 0, 0.6)",
+                paddingBottom: "5px",
+              }}
+            >
+              Sprint {sprint}
+            </h2>
             <SliderTrail
               cards={filteredSprints[sprint]}
               fetchTasks={fetchTasks}

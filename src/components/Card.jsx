@@ -5,6 +5,9 @@ import "slick-carousel/slick/slick-theme.css";
 import { format } from "date-fns";
 import { Button } from "@mui/material";
 import api from "../services/api";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function SliderTrail({ cards, fetchTasks, setCards }) {
   const settings = {
@@ -143,18 +146,19 @@ function SliderTrail({ cards, fetchTasks, setCards }) {
                 {!expandido && (
                   <Button
                     sx={{
-                      mt: -7,
+                      mt: -6,
                       ml: "-20px",
                       height: "20px",
                       pt: "50px",
-                      width: "250px",
+                      width: { lg: "103.5%",sm: "106.5%", md: "104.5%", xs: "250px" },
                       backgroundColor: "white",
                       background:
                         "linear-gradient(180deg, transparent,rgba(255, 255, 255, 0.47))",
+                      borderRadius: 3.5,
                     }}
                     onClick={() => !expandido && setExpandido(true)}
                   >
-                    🔽
+                    <ExpandMoreIcon sx={{ color: "white" }} />
                   </Button>
                 )}
 
@@ -265,29 +269,23 @@ function SliderTrail({ cards, fetchTasks, setCards }) {
                       height: "25px",
                     }}
                   >
-                    <Button
-                      variant="contained"
-                      onClick={() => deleteTask(card.id)}
-                      style={{
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                        color: "white",
-                        fontSize: 25,
-                      }}
-                    >
-                      🗑
+                    <Button onClick={() => deleteTask(card.id)}>
+                      <DeleteIcon sx={{ color: "white" }} />
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="contained"
-                      onClick={() => setExpandido(false)}
+                     
                       style={{
                         padding: "1px 25px",
                         borderRadius: "5px",
                         cursor: "pointer",
                       }}
-                    >
-                      ⏫
-                    </Button>
+                    > */}
+                    <KeyboardArrowUpIcon
+                      sx={{ color: "white" }}
+                      onClick={() => setExpandido(false)}
+                    />
+                    {/* </Button> */}
                   </div>
                 </div>
               )}
